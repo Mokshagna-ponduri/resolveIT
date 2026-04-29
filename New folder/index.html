@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResolveIT AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        /* --- ROOT & RESET --- */
+        :root {
+            --bg-root: #080a0f; --bg-glass: rgba(16, 18, 27, 0.75);
+            --bg-card: rgba(30, 33, 43, 0.6); --border: rgba(255,255,255,0.08);
+            --border-light: rgba(255,255,255,0.04);
+            --text-main: #eaeaea; --text-dim: #8b949e; --text-muted: #484f58;
+            --accent: #8957e5; --accent-glow: rgba(137,87,229,0.4);
+            --blue: #58a6ff; --green: #3fb950; --orange: #d29922; --red: #f85149;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-root); color: var(--text-main); height: 100vh; width: 100vw; overflow: hidden; display: flex; }
+
+        /* --- FLYING OBJECTS (Pure CSS Background) --- */
+        .bg-effects { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .fly-obj { position: absolute; border-radius: 50%; filter: blur(40px); opacity: 0.4; }
+        .fly-1 { width: 300px; height: 300px; background: var(--accent); top: -100px; left: -100px; animation: float1 25s linear infinite; }
+        .fly-2 { width: 200px; height: 200px; background: var(--blue); bottom: -50px; right: -50px; animation: float2 30s linear infinite; }
+        .fly-3 { width: 100px; height: 100px; background: var(--green); top: 50%; left: 40%; animation: float3 20s linear infinite; border: 2px solid rgba(255,255,255,0.1); background: transparent; filter: blur(0px); opacity: 0.3; }
+        .fly-4 { width: 400px; height: 400px; background: var(--orange); top: 20%; right: 20%; filter: blur(80px); opacity: 0.15; animation: float4 35s linear infinite; }
+        
+        @keyframes float1 { 0%{transform:translate(0,0)} 50%{transform:translate(100vw, 80vh)} 100%{transform:translate(0,0)} }
+        @keyframes float2 { 0%{transform:translate(0,0)} 50%{transform:translate(-90vw, -60vh)} 100%{transform:translate(0,0)} }
+        @keyframes float3 { 0%{transform:rotate(0deg) translate(0,0)} 50%{transform:rotate(180deg) translate(50vw, -50vh)} 100%{transform:rotate(360deg) translate(0,0)} }
+        @keyframes float4 { 0%{transform:translate(0,0)} 50%{transform:translate(-80vw, 40vh)} 100%{transform:translate(0,0)} }
+
+        /* --- SIDEBAR --- */
+        .sidebar { 
+            width: 240px; min-width: 240px; height: 100vh; z-index: 10;
+            background: var(--bg-glass); border-right: 1px solid var(--border);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; flex-direction: column; padding: 16px;
+        }
+        .logo { font-size: 16px; font-weight: 700; padding: 12px; margin-bottom: 20px; display: flex; gap: 8px; color: white; text-shadow: 0 0 10px var(--accent-glow); }
+        .logo span { color: var(--accent); }
+        .nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: var(--text-dim); font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-main); }
+        .nav-item.active { background: var(--accent-glow); color: white; border-color: var(--accent); box-shadow: 0 0 15px rgba(137,87,229,0.2); }
+        .nav-item svg { width: 16px; height: 16px; }
+        .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white;}
+        .user-info p { font-size: 13px; font-weight: 500; } .user-info span { font-size: 11px; color: var(--text-muted); }
+
+        /* --- MAIN AREA --- */
+        .main-area { flex: 1; height: 100vh; display: flex; flex-direction: column; overflow: hidden; z-index: 10; position: relative; }
+        .topbar { height: 50px; min-height: 50px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .topbar h2 { font-size: 14px; font-weight: 600; }
+        .status-pill { font-size: 11px; background: rgba(63,185,80,0.1); color: var(--green); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(63,185,80,0.2); }
+        .status-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); }
+
+        /* --- PAGES --- */
+        .pages-wrapper { flex: 1; position: relative; overflow: hidden; }
+        .page { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; display: none; flex-direction: column; }
+        .page.active { display: flex; }
+        .page::-webkit-scrollbar { width: 6px; } .page::-webkit-scrollbar-track { background: transparent; } .page::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        /* --- DASHBOARD --- */
+        .dash-content { padding: 24px; display: flex; flex-direction: column; gap: 24px; position: relative; z-index: 2; }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .stat-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; backdrop-filter: blur(10px); transition: 0.3s; }
+        .stat-box:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(137,87,229,0.1); transform: translateY(-2px); }
+        .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-num { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; background: linear-gradient(to right, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; backdrop-filter: blur(10px); display: flex; flex-direction: column; }
+        .card-header { font-size: 14px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+
+        .bar-chart { display: flex; flex-direction: column; gap: 16px; flex: 1; justify-content: center; }
+        .bar-row label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+        .bar-track { height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 4px; transition: 1s ease-out; }
+
+        .donut-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+        .donut { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--blue) 0% 35%, var(--green) 35% 60%, var(--orange) 60% 80%, var(--red) 80% 100%); position: relative; box-shadow: 0 0 30px rgba(88,166,255,0.2); }
+        .donut::after { content: ''; position: absolute; inset: 20px; background: var(--bg-card); border-radius: 50%; }
+        .donut-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-dim); }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .dot-sm { width: 8px; height: 8px; border-radius: 50%; }
+
+        .tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .activity-list { display: flex; flex-direction: column; gap: 12px; }
+        .activity-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; }
+        .act-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--border-light); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; border: 1px solid var(--border);}
+        .act-text p { color: var(--text-main); } .act-text span { color: var(--text-muted); font-size: 11px; display: block; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .data-table td { padding: 12px 0; border-bottom: 1px solid var(--border-light); color: var(--text-dim); }
+        .badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+        .bg-blue { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid rgba(88,166,255,0.2); }
+        .bg-red { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
+        .bg-orange { background: rgba(210,153,34,0.15); color: var(--orange); border: 1px solid rgba(210,153,34,0.2); }
+
+        /* --- CHAT --- */
+        .chat-layout { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; z-index: 2; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+        .chat-messages::-webkit-scrollbar { width: 4px; } .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+        .msg { display: flex; gap: 16px; animation: msgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .msg.user { flex-direction: row-reverse; }
+        .msg-avatar { width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--border-light); border: 1px solid var(--border); }
+        .msg.user .msg-avatar { background: var(--accent); color: white; font-size: 11px; font-weight: 700; border: none; box-shadow: 0 4px 15px var(--accent-glow); }
+        .msg-body { max-width: 75%; }
+        .msg.user .msg-body { display: flex; flex-direction: column; align-items: flex-end; }
+        .msg-role { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+        .msg-text { font-size: 14px; line-height: 1.7; color: #d4d4d8; background: var(--bg-card); border: 1px solid var(--border); backdrop-filter: blur(10px); padding: 16px; border-radius: 16px 16px 16px 4px; }
+        .msg.user .msg-text { background: var(--accent); color: white; border: none; border-radius: 16px 16px 4px 16px; box-shadow: 0 4px 20px var(--accent-glow); }
+        .msg-text strong { color: white; } .msg-text ul { padding-left: 20px; margin: 8px 0; } .msg-text li { margin-bottom: 4px; }
+        .msg-text em { color: var(--text-muted); }
+        .copy-row { margin-top: 8px; opacity: 0; transition: 0.2s; }
+        .msg:hover .copy-row { opacity: 1; }
+        .copy-btn { font-size: 11px; color: var(--text-muted); background: var(--bg-glass); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(10px); }
+        .typing-dots { display: flex; gap: 4px; padding: 8px 0; }
+        .typing-dots span { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: blink 1.4s infinite both; box-shadow: 0 0 10px var(--accent-glow); }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        @keyframes blink { 0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+
+        .chat-input-zone { padding: 16px 24px 24px 24px; border-top: 1px solid var(--border); background: var(--bg-glass); backdrop-filter: blur(20px); }
+        .chat-input-box { display: flex; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: 0.3s; }
+        .chat-input-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+        #chatInput { flex: 1; background: transparent; border: none; color: white; font-family: 'Inter'; font-size: 14px; padding: 16px; outline: none; resize: none; }
+        .send-btn { background: var(--accent); border: none; color: white; width: 56px; cursor: pointer; font-size: 18px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .send-btn:hover { background: #772ce8; }
+
+        /* --- LIBRARY --- */
+        .lib-content { padding: 24px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; }
+        .lib-header { display: flex; justify-content: space-between; align-items: center; }
+        .lib-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { font-size: 12px; padding: 6px 14px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-dim); cursor: pointer; transition: 0.2s; backdrop-filter: blur(10px); }
+        .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+        .lib-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: 0.3s; backdrop-filter: blur(10px); }
+        .lib-card:hover { border-color: var(--text-muted); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .lib-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: white; }
+        .lib-card ul { padding-left: 18px; font-size: 13px; color: var(--text-dim); } .lib-card li { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- FLYING BACKGROUND OBJECTS -->
+    <div class="bg-effects">
+        <div class="fly-obj fly-1"></div>
+        <div class="fly-obj fly-2"></div>
+        <div class="fly-obj fly-3"></div>
+        <div class="fly-obj fly-4"></div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="logo">🛠️ <span>ResolveIT</span></div>
+        <nav class="nav">
+            <div class="nav-item active" onclick="switchPage('dashboard', this)">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+                Dashboard
+            </div>
+            <div class="nav-item" onclick="switchPage('chat', this)">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                AI Assistant
+            </div>
+            <div class="nav-item" onclick="switchPage('library', this)">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/></svg>
+                Runbook DB
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="avatar">A</div>
+            <div class="user-info"><p>Admin</p><span>IT Engineering</span></div>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <header class="topbar">
+            <h2 id="topTitle">Dashboard</h2>
+            <div class="status-pill"><div class="status-dot"></div> Quantum Vector Engine Online</div>
+        </header>
+
+        <div class="pages-wrapper">
+            
+            <!-- DASHBOARD -->
+            <div id="page-dashboard" class="page active">
+                <div class="dash-content">
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-label">Vector Chunks</div>
+                            <div class="stat-num" id="stat-chunks">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Total AI Queries</div>
+                            <div class="stat-num" id="stat-queries">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Latency</div>
+                            <div class="stat-num">1.2s</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Accuracy</div>
+                            <div class="stat-num" style="color: var(--green);">98.4%</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="card">
+                            <div class="card-header">Issues Resolved by Category</div>
+                            <div class="bar-chart">
+                                <div class="bar-row"><label><span>Hardware Devices</span><span>342</span></label><div class="bar-track"><div class="bar-fill" style="width: 85%; background: var(--blue);"></div></div></div>
+                                <div class="bar-row"><label><span>Network / WiFi</span><span>280</span></label><div class="bar-track"><div class="bar-fill" style="width: 70%; background: var(--green);"></div></div></div>
+                                <div class="bar-row"><label><span>Software / Apps</span><span>250</span></label><div class="bar-track"><div class="bar-fill" style="width: 62%; background: var(--accent);"></div></div></div>
+                                <div class="bar-row"><label><span>Security / Access</span><span>120</span></label><div class="bar-track"><div class="bar-fill" style="width: 30%; background: var(--orange);"></div></div></div>
+                                <div class="bar-row"><label><span>Servers / Infra</span><span>180</span></label><div class="bar-track"><div class="bar-fill" style="width: 45%; background: var(--red);"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">Query Distribution</div>
+                            <div class="donut-container">
+                                <div class="donut"></div>
+                                <div class="donut-legend">
+                                    <div class="legend-item"><div class="dot-sm" style="background:var(--blue)"></div> Hardware (35%)</div>
+                                    <div class="legend-item"><div class="dot-sm" style="background:var(--green)"></div> Network (25%)</div>
+                                    <div class="legend-item"><div class="dot-sm" style="background:var(--orange)"></div> Software (20%)</div>
+                                    <div class="legend-item"><div class="dot-sm" style="background:var(--red)"></div> Critical (20%)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tables-row">
+                        <div class="card">
+                            <div class="card-header">Live Activity Feed</div>
+                            <div class="activity-list">
+                                <div class="activity-item"><div class="act-icon">🖥️</div><div class="act-text"><p>Resolved: Laptop freezing issue</p><span>2 mins ago by Admin</span></div></div>
+                                <div class="activity-item"><div class="act-icon">🌐</div><div class="act-text"><p>Resolved: VPN timeout error</p><span>15 mins ago by User_X</span></div></div>
+                                <div class="activity-item"><div class="act-icon">🗄️</div><div class="act-text"><p>Resolved: SSL Certificate expired</p><span>1 hour ago by Admin</span></div></div>
+                                <div class="activity-item"><div class="act-icon">🔒</div><div class="act-text"><p>Resolved: Account lockout</p><span>3 hours ago by Helpdesk</span></div></div>
+                            </div>
+                        </div>
+                        <div class="card" style="overflow-x: auto;">
+                            <div class="card-header">Top Frequent Issues</div>
+                            <table class="data-table">
+                                <thead><tr><th>Issue</th><th>Category</th><th>Vol</th></tr></thead>
+                                <tbody>
+                                    <tr><td style="color:white">Printer Offline</td><td><span class="badge bg-blue">Hardware</span></td><td>89</td></tr>
+                                    <tr><td style="color:white">VPN Drops</td><td><span class="badge bg-blue">Network</span></td><td>76</td></tr>
+                                    <tr><td style="color:white">Password Reset</td><td><span class="badge bg-orange">Security</span></td><td>65</td></tr>
+                                    <tr><td style="color:white">App Freezing</td><td><span class="badge bg-blue">Software</span></td><td>54</td></tr>
+                                    <tr><td style="color:white">High CPU</td><td><span class="badge bg-red">Server</span></td><td>42</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAT -->
+            <div id="page-chat" class="page">
+                <div class="chat-layout">
+                    <div class="chat-messages" id="chatBox">
+                        <div class="msg ai">
+                            <div class="msg-avatar">🛠️</div>
+                            <div class="msg-body">
+                                <div class="msg-role">ResolveIT AI</div>
+                                <div class="msg-text">System initialized. I am connected to the FAISS vector database. Describe your infrastructure issue to retrieve the exact resolution steps.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-zone">
+                        <div class="chat-input-box">
+                            <textarea id="chatInput" rows="1" placeholder="Type your IT issue here..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+                            <button class="send-btn" onclick="sendChat()">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIBRARY -->
+            <div id="page-library" class="page">
+                <div class="lib-content">
+                    <div class="lib-header"><h2 style="font-size: 16px;">Runbook Database</h2></div>
+                    <div class="lib-filters" id="libFilters">
+                        <button class="filter-btn active" onclick="loadLib('Hardware & End-User Devices', this)">Hardware</button>
+                        <button class="filter-btn" onclick="loadLib('Network & Connectivity', this)">Network</button>
+                        <button class="filter-btn" onclick="loadLib('Software & Applications', this)">Software</button>
+                        <button class="filter-btn" onclick="loadLib('Security & Access', this)">Security</button>
+                        <button class="filter-btn" onclick="loadLib('Server & Infrastructure', this)">Servers</button>
+                        <button class="filter-btn" onclick="loadLib('Communications (Email & Chat)', this)">Comms</button>
+                    </div>
+                    <div class="lib-grid" id="libGrid"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        marked.setOptions({ breaks: true, gfm: true });
+
+        function switchPage(id, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`page-${id}`).classList.add('active');
+            if(el) el.classList.add('active');
+            document.getElementById('topTitle').innerText = { dashboard: 'System Dashboard', chat: 'AI Resolution Engine', library: 'Runbook Database' }[id];
+            if(id === 'dashboard') fetchStats();
+        }
+
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if(res.status === 401) return location.reload();
+                const data = await res.json();
+                animateValue('stat-chunks', 0, data.total_chunks, 800);
+                animateValue('stat-queries', 0, data.query_count, 800);
+            } catch(e) { document.getElementById('stat-chunks').innerText = "Err"; }
+        }
+
+        function animateValue(id, start, end, duration) {
+            const el = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                el.innerText = Math.floor(progress * (end - start) + start);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function appendMsg(type, html, isLoading=false) {
+            const box = document.getElementById('chatBox');
+            const div = document.createElement('div');
+            div.className = `msg ${type}`;
+            const isUser = type === 'user';
+            const icon = isUser ? '<div class="msg-avatar">A</div>' : '<div class="msg-avatar">🛠️</div>';
+            const role = isUser ? '' : '<div class="msg-role">ResolveIT AI</div>';
+            let content = isLoading ? '<div class="typing-dots"><span></span><span></span><span></span></div>' : `<div class="msg-text">${html}</div>${isUser ? '' : '<div class="copy-row"><button class="copy-btn" onclick="copyText(this)">Copy steps</button></div>'}`;
+            div.innerHTML = `${icon}<div class="msg-body">${role}${content}</div>`;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            return div;
+        }
+        function copyText(btn) { navigator.clipboard.writeText(btn.previousElementSibling.innerText); btn.innerText = 'Copied!'; setTimeout(()=>btn.innerText='Copy steps', 2000); }
+
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim(); if(!text) return;
+            appendMsg('user', text); input.value = '';
+            const loadDiv = appendMsg('ai', '', true);
+            try {
+                const res = await fetch('/ask', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({query: text}) });
+                if(res.status === 401) return location.reload();
+                const data = await res.json();
+                
+                // DYNAMIC UPDATE: Update the dashboard query count instantly
+                const queryEl = document.getElementById('stat-queries');
+                if(queryEl) queryEl.innerText = parseInt(queryEl.innerText || 0) + 1;
+
+                loadDiv.querySelector('.msg-body').innerHTML = `<div class="msg-role">ResolveIT AI</div><div class="msg-text">${marked.parse(data.answer)}</div><div class="copy-row"><button class="copy-btn" onclick="copyText(this)">Copy steps</button></div>`;
+            } catch(e) {
+                loadDiv.querySelector('.msg-body').innerHTML = `<div class="msg-role">Error</div><div class="msg-text" style="color:var(--red)">Connection failed.</div>`;
+            }
+        }
+
+        async function loadLib(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            const grid = document.getElementById('libGrid');
+            grid.innerHTML = '<div style="grid-column:1/-1; color:var(--text-muted); font-size:13px; padding:20px;">Fetching data...</div>';
+            try {
+                const res = await fetch(`/api/runbooks?category=${encodeURIComponent(cat)}`);
+                if(res.status === 401) return location.reload();
+                const data = await res.json(); grid.innerHTML = '';
+                if(data.runbooks.length === 0) { grid.innerHTML = '<div style="grid-column:1/-1; color:var(--text-muted); font-size:13px;">No data found.</div>'; return; }
+                data.runbooks.forEach((t, i) => {
+                    const lines = t.split('\n'); const title = lines[0].replace('Troubleshooting: ', ''); const body = lines.slice(1).join('\n');
+                    const card = document.createElement('div'); card.className = 'lib-card'; card.style.opacity = '0';
+                    card.innerHTML = `<h3>${title}</h3><div>${marked.parse(body)}</div>`;
+                    grid.appendChild(card);
+                    setTimeout(() => { card.style.transition = "0.3s ease"; card.style.opacity = '1'; }, i * 50);
+                });
+            } catch(e) { grid.innerHTML = '<div style="grid-column:1/-1; color:var(--red); font-size:13px;">Error loading.</div>'; }
+        }
+
+        fetchStats();
+    </script>
+</body>
+</html>

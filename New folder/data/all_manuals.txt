@@ -1,0 +1,415 @@
+--- CATEGORY: HARDWARE & END-USER DEVICES ---
+
+Troubleshooting: Laptop Won't Turn On
+Symptoms: Pressing the power button does nothing. The screen is black and there are no lights.
+Root Cause: The battery is completely dead, or the power charger is broken.
+Resolution Steps:
+1. Unplug the charger from the wall and plug it back in securely.
+2. Look for a light on the charger box to confirm it is getting power.
+3. Leave the laptop plugged in for 15 minutes to let the battery get a small charge.
+4. Press the power button again.
+5. If it still fails, try a different wall outlet.
+
+---
+
+Troubleshooting: Blue Screen of Death (BSOD)
+Symptoms: The laptop suddenly crashes and shows a blue screen with a sad face and error codes.
+Root Cause: A hardware driver failed, or a recent Windows update caused a conflict.
+Resolution Steps:
+1. Force the laptop to turn off by holding the power button for 10 seconds.
+2. Turn the laptop back on.
+3. If it boots normally, go to Settings and check for recent Windows updates. Uninstall the latest update if it happened today.
+4. Run a virus scan to ensure malware is not causing the crash.
+5. If it happens again, note down the error code on the blue screen for the IT team.
+
+---
+
+Troubleshooting: Mouse Or Keyboard Not Working
+Symptoms: The cursor does not move, or typing on the keyboard does not type anything on the screen.
+Root Cause: The wireless USB dongle is loose, or the device is out of battery.
+Resolution Steps:
+1. Unplug the USB receiver from the computer and plug it into a different USB port.
+2. If it is a wireless mouse or keyboard, flip it over and check the power switch. Make sure it is turned ON.
+3. Replace the batteries in the device.
+4. If it is a laptop keyboard, restart the laptop.
+5. If it still fails, plug in a wired mouse or keyboard to test if the port is broken.
+
+---
+
+Troubleshooting: External Monitor No Display
+Symptoms: A second monitor is plugged into the laptop but the screen says "No Signal".
+Root Cause: The laptop is not sending video to the correct port, or the cable is bad.
+Resolution Steps:
+1. Make sure the monitor is turned on and plugged into a wall outlet.
+2. Check the HDMI or DisplayPort cable on both ends to ensure it is pushed in all the way.
+3. Press the Windows key and the letter P at the same time.
+4. Select "Duplicate" or "Extend" from the menu that appears on the screen.
+5. Try using a different cable.
+
+---
+
+Troubleshooting: Laptop Battery Draining Fast
+Symptoms: The laptop only lasts for 30 minutes away from the charger.
+Root Cause: The battery is old and worn out, or the screen brightness is too high.
+Resolution Steps:
+1. Turn down the screen brightness using the keys on the keyboard.
+2. Close any apps or browser tabs that are running in the background.
+3. Check battery health by typing "cmd" in search, opening Command Prompt, and typing "powercfg /batteryreport".
+4. If the report says the battery is weak, submit a ticket to replace the physical battery.
+
+---
+
+Troubleshooting: USB Drive Not Recognized
+Symptoms: Plugging in a USB thumb drive does not show it in the file explorer.
+Root Cause: The drive needs to be formatted, or the USB port is failing.
+Resolution Steps:
+1. Plug the USB drive into a different USB port on the computer.
+2. Plug it into a different computer to see if the drive itself is broken.
+3. If it works on another computer, open Disk Management on this computer and assign it a drive letter.
+4. If it asks to format the drive, warn the user that all data will be erased before clicking format.
+
+---
+
+--- CATEGORY: NETWORK & CONNECTIVITY ---
+
+Troubleshooting: Wi-Fi Keeps Disconnecting
+Symptoms: The laptop connects to Wi-Fi for a few minutes, then drops the connection repeatedly.
+Root Cause: The Wi-Fi driver is outdated, or there is interference from other devices.
+Resolution Steps:
+1. Turn off the Wi-Fi switch on the laptop, wait 10 seconds, and turn it back on.
+2. Forget the Wi-Fi network in settings and type the password in again.
+3. Move closer to the Wi-Fi router to rule out physical distance.
+4. Update the Wi-Fi adapter driver in Device Manager.
+5. Restart the laptop.
+
+---
+
+Troubleshooting: No Internet Access (Local Only)
+Symptoms: The computer says it is connected to Wi-Fi, but there is a yellow warning sign and no websites load.
+Root Cause: The router lost connection to the internet service provider.
+Resolution Steps:
+1. Unplug the power cable from the main Wi-Fi router.
+2. Wait 30 seconds.
+3. Plug the power cable back in and wait 2 minutes for it to fully boot up.
+4. Reconnect the laptop to the Wi-Fi.
+5. If it still fails, call the Internet Service Provider.
+
+---
+
+Troubleshooting: Cable Unplugged Error
+Symptoms: A desktop computer says "Network cable unplugged" even though the cable is plugged in.
+Root Cause: The ethernet cable is broken, or the wall jack is dead.
+Resolution Steps:
+1. Unplug the cable from the computer and plug it back in until you hear a click.
+2. Unplug the cable from the wall and plug it back in.
+3. Try a different ethernet cable.
+4. Plug the cable into a different wall jack in the office.
+5. If nothing works, the network port in the wall needs to be repaired by facilities.
+
+---
+
+Troubleshooting: DNS Server Not Responding
+Symptoms: Error message says DNS server is not responding when trying to open a webpage.
+Root Cause: The computer is trying to use a bad DNS address to find websites.
+Resolution Steps:
+1. Open Network Settings and click on the Wi-Fi or Ethernet properties.
+2. Find "Internet Protocol Version 4 (TCP/IPv4)" and click Properties.
+3. Change the setting to "Use the following DNS server addresses".
+4. Type 8.8.8.8 for the Preferred DNS server.
+5. Click OK and restart the browser.
+
+---
+
+Troubleshooting: IP Address Conflict
+Symptoms: Warning pop up says there is an IP address conflict with another system on the network.
+Root Cause: Two devices on the network were accidentally given the same IP address.
+Resolution Steps:
+1. Unplug the computer from the network cable or disconnect from Wi-Fi.
+2. Open Command Prompt and type "ipconfig /release" and press Enter.
+3. Type "ipconfig /renew" and press Enter.
+4. Reconnect to the network.
+5. If the issue persists, the IT team needs to check the DHCP server.
+
+---
+
+--- CATEGORY: SOFTWARE & APPLICATIONS ---
+
+Troubleshooting: Microsoft Word Crashed And Lost Document
+Symptoms: Word suddenly closed and the user cannot find their unsaved work.
+Root Cause: The application hit a bug, but auto-save usually keeps a backup.
+Resolution Steps:
+1. Open Microsoft Word again.
+2. Look at the left side of the screen for a "Document Recovery" pane.
+3. Click on the most recent file in that pane to open it.
+4. Save the file immediately to a safe location.
+5. If the pane is not there, search the computer for ".asd" files, which are auto-saves.
+
+---
+
+Troubleshooting: Excel File Is Read-Only
+Symptoms: User opens an Excel file and it says "Read-Only" at the top. They cannot save changes.
+Root Cause: Someone else on the network has the file open right now.
+Resolution Steps:
+1. Tell the user to save the file under a new name (Save As) to avoid losing their work.
+2. Ask the user who else is working on this file.
+3. Contact the other person and ask them to close the file.
+4. Once closed, the original file can be edited again.
+5. If nobody else has it open, the file might be corrupted. Check the file properties to ensure it is not locked.
+
+---
+
+Troubleshooting: Application Keeps Freezing
+Symptoms: A specific program stops responding when the user clicks on it.
+Root Cause: The program ran out of memory or hit a temporary glitch.
+Resolution Steps:
+1. Press Ctrl, Alt, and Delete at the same time.
+2. Open Task Manager.
+3. Find the frozen application in the list.
+4. Click on it and click "End Task".
+5. Open the application again.
+
+---
+
+Troubleshooting: Software Update Keeps Failing
+Symptoms: An application tries to update but gives an error code every time.
+Root Cause: The computer needs a restart to finish a previous update, or the installer is corrupted.
+Resolution Steps:
+1. Restart the computer and try the update again.
+2. Turn off the antivirus temporarily, as it might be blocking the update.
+3. If it still fails, uninstall the application completely.
+4. Download the latest version from the company website and install it fresh.
+
+---
+
+Troubleshooting: Windows Update Stuck At 0 Percent
+Symptoms: The computer is trying to update Windows but the progress bar stays at 0% for hours.
+Root Cause: The update files downloaded incorrectly and are stuck.
+Resolution Steps:
+1. Do not turn off the computer. Let it sit for 2 hours just in case it is very slow.
+2. If it does not move, hold the power button to force a shutdown.
+3. Turn the computer back on.
+4. Go to Settings, search for "Troubleshoot", and run the Windows Update troubleshooter.
+5. Clear the Windows Update cache folder and try again.
+
+---
+
+--- CATEGORY: SECURITY & ACCESS ---
+
+Troubleshooting: Forgot Windows Login Password
+Symptoms: User cannot get past the login screen because they forgot their password.
+Root Cause: Human error.
+Resolution Steps:
+1. Click "I forgot my password" on the login screen.
+2. Verify the user's identity using their phone number or backup email.
+3. Reset the password through the Microsoft portal.
+4. If it is a local work account (not Microsoft), the IT admin must reset it in Active Directory.
+5. Instruct the user to write the new password down securely.
+
+---
+
+Troubleshooting: Multi-Factor Authentication (MFA) Not Working
+Symptoms: User enters their password correctly, but the app or phone call for MFA does not arrive.
+Root Cause: The phone is on airplane mode, or the MFA time is out of sync.
+Resolution Steps:
+1. Ask the user to check if their phone has cellular service or Wi-Fi.
+2. Turn off Airplane Mode on the phone.
+3. Open the Microsoft Authenticator app to see if a notification is stuck there.
+4. Ensure the user's phone clock is set to automatic time.
+5. If nothing works, an IT admin must generate a temporary bypass code.
+
+---
+
+Troubleshooting: Access Denied When Opening A Folder
+Symptoms: User clicks a network folder and gets "You do not have permission to access this folder".
+Root Cause: The user is not a member of the correct security group for that folder.
+Resolution Steps:
+1. Verify the user actually needs access to this specific folder.
+2. Log into the file server as an admin.
+3. Right-click the folder, go to Properties, then the Security tab.
+4. Add the user's name or their department group to the list.
+5. Give them "Read" or "Modify" permissions as required and click Apply.
+
+---
+
+Troubleshooting: Suspicious Email Phishing Report
+Symptoms: User received an email asking for their password or containing a strange link.
+Root Cause: A hacker is trying to steal company credentials.
+Resolution Steps:
+1. Tell the user NOT to click any links or open any attachments in the email.
+2. Ask the user to forward the email to the IT security team.
+3. Block the sender's email address in the company spam filter.
+4. If the user already clicked the link, immediately force them to change their password.
+5. Scan the user's computer for malware.
+
+---
+
+Troubleshooting: Smart Card Reader Not Working
+Symptoms: User inserts their ID smart card, but the green light does not blink and the computer does not read it.
+Root Cause: The smart card driver is missing or the card chip is dirty.
+Root Cause: The smart card driver is missing, or the card chip is dirty.
+Resolution Steps:
+1. Take the smart card out and wipe the gold chip with a soft shirt or microfiber cloth.
+2. Put the card back in, making sure it is pushed all the way in.
+3. Try a different USB port for the card reader.
+4. Open Device Manager to ensure the card reader shows up without a yellow warning icon.
+5. If the reader is bad, issue the user a temporary USB card reader from IT storage.
+
+---
+
+Troubleshooting: Password Expired Notification
+Symptoms: User gets a pop up saying their network password will expire in 5 days.
+Root Cause: Company policy requires passwords to be changed every 90 days.
+Resolution Steps:
+1. Instruct the user to press Ctrl, Alt, and Delete.
+2. Select the "Change a password" option.
+3. Have them type in their old password.
+4. Type in a new password that meets the rules (usually needs a capital letter, number, and symbol).
+5. Confirm the new password.
+
+---
+
+--- CATEGORY: SERVER & INFRASTRUCTURE ---
+
+Troubleshooting: Web Server Returned 404 Not Found
+Symptoms: Users going to a specific webpage get a "404 Error: Page Not Found".
+Root Cause: The webpage file was deleted from the server, or the URL was typed wrong.
+Resolution Steps:
+1. Check the URL the user is trying to reach for spelling mistakes.
+2. Log into the web server and check the root folder for the website files.
+3. Verify that the index.html or default.aspx file was not accidentally deleted.
+4. Check the web server configuration file to ensure the paths are correct.
+5. Restore the missing file from the nightly backup.
+
+---
+
+Troubleshooting: Database Connection Timeout
+Symptoms: The web application works, but when it tries to load data, it says "Connection Timeout Expired".
+Root Cause: The database server is too busy, or the network link between the web server and database is broken.
+Resolution Steps:
+1. Ping the database server IP address from the web server to check network connectivity.
+2. Log into the database server and check the CPU and Memory usage.
+3. Look at the active connections to see if a query is stuck and holding up the system.
+4. Kill any long-running or frozen database queries.
+5. Restart the database service if it is completely unresponsive.
+
+---
+
+Troubleshooting: Server Ran Out Of Disk Space
+Symptoms: Server alerts say the C: drive is at 100% capacity. Applications start crashing.
+Root Cause: Old log files built up over months and filled the hard drive.
+Resolution Steps:
+1. Open the server drive and find the folder taking up the most space.
+2. Delete old application log files that are older than 30 days.
+3. Empty the server's Recycle Bin.
+4. Run the Windows Disk Cleanup tool and remove temporary files.
+5. If the drive is still full, expand the virtual hard disk size in the VMware or cloud console.
+
+---
+
+Troubleshooting: Scheduled Backup Failed
+Symptoms: The nightly backup job did not run, leaving the company at risk of data loss.
+Root Cause: The backup storage drive was unplugged, or the backup software license expired.
+Resolution Steps:
+1. Check the backup software dashboard for the specific error code.
+2. Verify that the target backup drive (external drive or network share) is turned on and reachable.
+3. Ensure the service account running the backup has not had its password changed.
+4. Check if there is enough space on the backup drive to hold the new data.
+5. Manually trigger the backup job to start immediately.
+
+---
+
+Troubleshooting: SSL Certificate Expired Warning
+Symptoms: Users visiting the company website get a big red warning screen saying "Your connection is not private".
+Root Cause: The security certificate for the website expired and was not renewed.
+Resolution Steps:
+1. Check the expiration date on the current certificate in the web browser.
+2. Log into the company certificate authority or third-party vendor (like GoDaddy).
+3. Generate a new Certificate Signing Request (CSR) on the web server.
+4. Submit the CSR to get a new certificate.
+5. Import the new certificate into the web server and bind it to the website.
+
+---
+
+Troubleshooting: High CPU Usage On Server
+Symptoms: Server dashboard shows the CPU is stuck at 99%, making the server very slow.
+Root Cause: A runaway process, a virus, or a poorly written code loop is overworking the processor.
+Resolution Steps:
+1. Open Task Manager on the server and click the CPU column to sort by highest usage.
+2. Identify the exact program using the CPU.
+3. If it is a known application, restart that specific application service.
+4. If it is an unknown process, search the name online to see if it is malware.
+5. If the process cannot be killed, reboot the server.
+
+---
+
+--- CATEGORY: COMMUNICATIONS (EMAIL & CHAT) ---
+
+Troubleshooting: Cannot Send Attachments Over Size Limit
+Symptoms: User tries to email a video or large file but gets an "Attachment size exceeds limit" error.
+Root Cause: The company email server blocks files larger than 25 Megabytes.
+Resolution Steps:
+1. Tell the user they cannot email files that large.
+2. Instruct them to upload the file to the company cloud storage (like OneDrive or SharePoint).
+3. Have them create a "Share Link" to the file.
+4. Paste that link into the body of the email instead of attaching the file.
+5. Send the email.
+
+---
+
+Troubleshooting: Missing Emails In Outlook
+Symptoms: User knows they received an email but cannot find it in their inbox.
+Root Cause: The email was accidentally marked as junk, or an inbox rule moved it.
+Resolution Steps:
+1. Check the "Junk Email" or "Spam" folder.
+2. Check the "Deleted Items" folder.
+3. Look at the top of the Outlook window to see if there is a filter applied (like "Unread only").
+4. Check the "Rules" setting to see if an automatic rule is moving emails to another folder.
+5. Use the search bar at the top to search for the sender's name.
+
+---
+
+Troubleshooting: Outlook PST File Is Too Large
+Symptoms: Outlook becomes very slow, or it crashes when trying to open it.
+Root Cause: The local archive file (PST) has reached its maximum size limit of 50 Gigabytes.
+Resolution Steps:
+1. Find the PST file on the computer.
+2. Create a new, second PST file in Outlook.
+3. Move half of the old emails from the old PST to the new PST.
+4. Run the "Compact Now" tool in Outlook settings to shrink the file size.
+5. Instruct the user to delete emails they no longer need.
+
+---
+
+Troubleshooting: Microsoft Teams Won't Load
+Symptoms: Teams opens but just shows a blank white screen or spins forever.
+Root Cause: The Teams cache folder is corrupted.
+Resolution Steps:
+1. Completely close Microsoft Teams. Right-click the icon in the taskbar and click Quit.
+2. Press the Windows Key and R to open the Run dialog.
+3. Type in "appdata\Microsoft\Teams" and press Enter.
+4. Delete all the files and folders inside that directory.
+5. Open Microsoft Teams again. It will take a few minutes to rebuild the cache.
+
+---
+
+Troubleshooting: No Audio In Video Call
+Symptoms: User is in a Zoom or Teams call, but they cannot hear anyone else.
+Root Cause: The wrong speaker or headphone device is selected in the app.
+Resolution Steps:
+1. Look at the meeting controls and find the speaker icon.
+2. Click the small arrow next to the speaker icon to see the list of audio devices.
+3. Change the selection from "Headphones" to "PC Speaker" or vice versa.
+4. Make sure the physical volume dial on the headphones is turned up.
+5. Check the physical mute button on the laptop keyboard.
+
+---
+
+Troubleshooting: Screen Sharing Not Working
+Symptoms: User tries to share their screen in a meeting, but others only see a black screen or get an error.
+Root Cause: The user did not give the app permission to record the screen, or the graphics driver is blocking it.
+Resolution Steps:
+1. On Mac, go to System Settings, Privacy and Security, and ensure Screen Recording is turned on for the meeting app.
+2. On Windows, go to Settings, Privacy, and ensure "Allow desktop apps to access your screen" is on.
+3. Try restarting the meeting app.
+4. Update the computer's graphics driver.
+5. If sharing a specific window fails, try sharing the "Entire Screen" instead.
